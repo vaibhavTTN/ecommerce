@@ -1,34 +1,32 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Role;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.User.User;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @ManyToMany(
+            mappedBy = "role",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
     )
-    private List<User> user;
+    private Set<User> user = new HashSet<>();
 
     private String authority;
 
     private Boolean isDeleted;
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                '}';
-    }
 }

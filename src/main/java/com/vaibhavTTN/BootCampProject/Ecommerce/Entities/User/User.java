@@ -4,47 +4,49 @@ import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Address.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Customer.Customer;
 import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Role.Role;
 import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Seller.Seller;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
-//    @Id
-//    @GenericGenerator(name = "user_id",strategy = "com.vaibhavTTN.BootCampProject.Ecommerce.Entities.User.UserIdGenerator")
-//    @GeneratedValue(generator = "user_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id",referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id",referencedColumnName = "id"
+            )
     )
-    private List<Role> role;
+    private Set<Role> role = new HashSet<>();
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private Seller seller;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private Customer customer;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Address> address;
 
-    @NotNull
-    @Email(
-            regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
-            flags = Pattern.Flag.CASE_INSENSITIVE
-    )
     @Column(unique = true, updatable = false)
     private String email;
 
@@ -59,7 +61,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(columnDefinition = "Boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean isDelete;
 
     private String modifiedBy;
@@ -70,26 +72,30 @@ public class User {
 
     private String modifiedOn;
 
-    @Column(columnDefinition = "Boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean isActive;
 
-    @Column(columnDefinition = "Boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean isExpired;
 
-    @Column(columnDefinition = "Boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean isLocked;
 
-    @Column(columnDefinition = "Integer default 0")
+    @Column(columnDefinition = "int default 0")
     private Integer invalidAttemptCount;
 
     @NotNull
     @Column(nullable = false)
     private String passwordUpdatedDate;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "Id=" + Id +
-                '}';
+        public void addAddress(Address address1){
+        if(address1!=null){
+            if(address == null){
+                address = new ArrayList<>();
+            }
+            address1.setUser(this);
+            address.add(address1);
+        }
     }
+
 }

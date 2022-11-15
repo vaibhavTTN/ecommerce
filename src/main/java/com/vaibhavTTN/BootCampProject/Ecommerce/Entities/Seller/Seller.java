@@ -1,19 +1,20 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Seller;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.Entities.User.User;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Seller {
 
-//    @Id
-//    @GenericGenerator(name = "seller_id",strategy = "com.vaibhavTTN.BootCampProject.Ecommerce.Entities.Seller.SellerIdGenerator")
-//    @GeneratedValue(generator = "seller_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,16 +22,14 @@ public class Seller {
     @OneToOne
     private User user;
 
+    @Column(nullable = false)
     private String gst;
 
+    @Column(nullable = false)
     private String companyName;
 
+    @Column(nullable = false)
     private String companyContact;
 
-    @Override
-    public String toString() {
-        return "Seller{" +
-                "id=" + id +
-                '}';
-    }
+
 }
