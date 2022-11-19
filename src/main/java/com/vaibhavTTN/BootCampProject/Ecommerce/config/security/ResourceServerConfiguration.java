@@ -1,6 +1,5 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.config;
+package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.service.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
@@ -56,13 +54,17 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST,"/customer").hasAnyRole("CUSTOMER","ADMIN")
-                .mvcMatchers(HttpMethod.POST,"/seller").hasAnyRole("SELLER","ADMIN")
+                .mvcMatchers(HttpMethod.POST,"/register/customer").permitAll()
+                .mvcMatchers(HttpMethod.POST,"/register/seller").permitAll()
+                .mvcMatchers(HttpMethod.PUT,"/register/verify/**").permitAll()
+                .mvcMatchers(HttpMethod.POST,"/register/re-verify/**").permitAll()
+                .mvcMatchers(HttpMethod.POST,"/forget-password").permitAll()
+                .mvcMatchers(HttpMethod.POST,"/reset-password").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .csrf().disable();
+                .csrf().disable().logout().logoutSuccessUrl("/");
     }
 
 }

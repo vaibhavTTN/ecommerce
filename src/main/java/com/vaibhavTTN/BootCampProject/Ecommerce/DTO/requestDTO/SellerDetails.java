@@ -8,64 +8,62 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Component
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SellerDetails {
 
-    @NotBlank
+    @NotBlank(message = "Email cannot be blank")
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "FirstName cannot be blank")
     private String firstName;
 
     private String middleName;
 
-    @NotBlank
+    @NotBlank(message = "LastName cannot be blank")
     private String lastName;
 
-    @NotBlank
+    @NotBlank(message = "Password cannot be blank")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$",
             message = "Password must contain one UpperCase, one LowerCase, one Special Character and one Number"
     )
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Confirm password cannot be blank")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$",
             message = "Password must contain one UpperCase, one LowerCase, one Special Character and one Number"
     )
     private String confirmPassword;
 
-    @NotBlank
+    @NotBlank(message = "GST cannot be blank")
     private String gst;
 
-    @NotBlank
+    @NotBlank(message = "Company Name cannot be blank")
     private String companyName;
 
-    @NotBlank
-    @Size(min=10,max = 10)
+    @NotBlank(message = "Company contact cannot be blank")
+    @Size(min=10,max = 10, message = "Company contact must be valid")
     private String companyContact;
 
-    @NotBlank
+    @NotBlank(message = "City cannot be blank")
     private String city;
 
-    @NotBlank
+    @NotBlank(message = "State cannot be blank")
     private String state;
 
-    @NotBlank
+    @NotBlank(message = "Country cannot be blank")
     private String country;
 
-    @NotBlank
+    @NotBlank(message = "AddressLine cannot be blank")
     private String addressLine;
 
-    @NotBlank
+    @NotBlank(message = "Zipcode cannot be blank")
     private String zipCode;
 
-    @NotBlank
     private String label;
 }

@@ -2,37 +2,40 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerDetails;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerDetails;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Customer;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Seller;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
-import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.EmailAlreadyExistsException;
-import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.PasswordMatchException;
-import com.vaibhavTTN.BootCampProject.Ecommerce.repository.CustomerRepository;
-import com.vaibhavTTN.BootCampProject.Ecommerce.repository.roleRepository;
-import com.vaibhavTTN.BootCampProject.Ecommerce.repository.SellerRepository;
-import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
+import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.entities.*;
+import com.vaibhavTTN.BootCampProject.Ecommerce.enums.Roles;
+import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.*;
+import com.vaibhavTTN.BootCampProject.Ecommerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
-public class registerService {
+public class RegisterService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RegisterService.class);
 
     @Autowired
     UserRepository userRepository;
     @Autowired
-    roleRepository roleRepository;
+    RoleRepository roleRepository;
 
     @Autowired
-    NotificationService notificationService;
+    EmailSenderService senderService;
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    TokenRepository tokenRepository;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -40,12 +43,66 @@ public class registerService {
     @Autowired
     SellerRepository sellerRepository;
 
-    public boolean matchPassword(String password,String confirmPassword){
+    public boolean checkPassword(String password, String confirmPassword){
         return !password.equals(confirmPassword);
     }
 
     public boolean emailAlreadyExitCheck(String email){
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    public void sendEmail(User user){
+        if(user.getRole().getAuthority().equals(Roles.ROLE_CUSTOMER.toString())){
+            try {
+                senderService.sendEmailVerificationCustomer(user);
+            }catch( Exception e ){
+                logger.debug("Error in sending Email by sendEmailVerificationCustomer method \n {} ",e.getMessage());
+            }
+        }else {
+            try {
+                senderService.sendEmailVerificationSeller(user);
+            }catch( Exception e ){
+                logger.error("Error in sending Email by sendEmailVerificationSeller method \n {} ",e.getMessage());
+            }
+        }
+    }
+    public void verify(String token){
+        ConfirmationToken confirmationToken = tokenRepository
+                .findByToken(token)
+                .orElseThrow(()-> new TokenExpired("This token is invalid"));
+
+        if(confirmationToken.isExpired()){
+            throw new TokenExpired("This token is invalid");
+        }
+
+        User user = confirmationToken.getUser();
+
+        user.setIsActive(true);
+
+        userRepository.save(user);
+
+        try {
+            senderService.sendVerifiedEmail(user);
+        }catch( Exception e ){
+            logger.error("Error in sending Email by sendVerifiedEmail method \n {} ",e.getMessage());
+        }
+        tokenRepository.delete(confirmationToken);
+    }
+
+    public void resendVerify(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserNotFoundException("Email is not present"));
+
+        if(Boolean.TRUE.equals(user.getIsActive())){
+            throw new UserIsAlreadyActive("User is already active");
+        }
+
+        ConfirmationToken confirmationToken = tokenRepository
+                .findByUser(user).orElseThrow(()->new UserNotFoundException("User is not present"));
+
+        tokenRepository.delete(confirmationToken);
+
+        sendEmail(user);
     }
 
     public void createCustomer(CustomerDetails customerDetails) {
@@ -54,7 +111,7 @@ public class registerService {
             throw new EmailAlreadyExistsException("Email Already exits ::"+ customerDetails.getEmail());
         }
 
-        if(matchPassword(
+        if(checkPassword(
                 customerDetails.getPassword(),
                 customerDetails.getConfirmPassword()
         )){
@@ -67,7 +124,6 @@ public class registerService {
         Date date = new Date();
 
         Role role = roleRepository.findByAuthority("ROLE_CUSTOMER").orElseThrow();
-        System.out.println(role.toString());
 
         user.setRole(role);
 
@@ -89,24 +145,21 @@ public class registerService {
 
         customerRepository.save(customer);
 
-//        try {
-//            notificationService.sendNotificaitoin(user);
-//        }catch( Exception e ){
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            senderService.sendEmailVerificationCustomer(user);
+        }catch( Exception e ){
+            logger.error("Error in sending Email by sendEmailVerificationCustomer method \n {} ",e.getMessage());
+        }
 
-
-        System.out.println(user.toString());
-//        userRepository.save(user);
     }
 
-    public void createService(SellerDetails sellerDetails){
+    public void createSeller(SellerDetails sellerDetails){
 
         if(emailAlreadyExitCheck(sellerDetails.getEmail())){
             throw new EmailAlreadyExistsException("Email Already exits ::"+ sellerDetails.getEmail());
         }
 
-        if(matchPassword(
+        if(checkPassword(
                 sellerDetails.getPassword(),
                 sellerDetails.getConfirmPassword()
         )){
@@ -119,7 +172,6 @@ public class registerService {
         Date date = new Date();
 
         Role role = roleRepository.findByAuthority("ROLE_SELLER").orElseThrow();
-        System.out.println(role.toString());
 
         user.setRole(role);
 
@@ -153,13 +205,12 @@ public class registerService {
 
         seller.setUser(user);
 
-//        try {
-//            notificationService.sendNotificaitoin(user);
-//        }catch( Exception e ){
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            senderService.sendEmailVerificationSeller(user);
+        }catch( Exception e ){
+            logger.error("Error in sending Email by sendEmailVerificationSeller method \n {} ",e.getMessage());
+        }
 
-        System.out.println(user.toString());
         sellerRepository.save(seller);
     }
 }

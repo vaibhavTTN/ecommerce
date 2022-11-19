@@ -1,18 +1,19 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO;
 
-import lombok.*;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerDetails {
+public class ResetPassword {
 
     @NotBlank(
             message = "Email cannot be blank"
@@ -24,17 +25,8 @@ public class CustomerDetails {
     )
     private String email;
 
-    @NotBlank(
-            message = "FirstName cannot be blank"
-    )
-    private String firstName;
-
-    private String middleName;
-
-    @NotBlank(
-            message = "LastName cannot be blank"
-    )
-    private String lastName;
+    @NotBlank( message = "Token cannot be blank")
+    private String token;
 
     @NotBlank
     @Pattern(
@@ -49,8 +41,4 @@ public class CustomerDetails {
             message = "Password must contain one UpperCase, one LowerCase, one Special Character and one Number"
     )
     private String confirmPassword;
-
-    @NotBlank
-    @Size(min=10,max = 10, message = "contact must be valid")
-    private String contact;
 }

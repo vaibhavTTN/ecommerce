@@ -2,7 +2,7 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.event;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
-import com.vaibhavTTN.BootCampProject.Ecommerce.repository.roleRepository;
+import com.vaibhavTTN.BootCampProject.Ecommerce.repository.RoleRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -23,7 +23,7 @@ public class Bootstrap implements ApplicationRunner {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    roleRepository roleRepository;
+    RoleRepository roleRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

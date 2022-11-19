@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.config;
+package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -80,7 +80,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Bean
     JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setSigningKey("1234");
+        jwtAccessTokenConverter.setSigningKey("kamal");
         return jwtAccessTokenConverter;
     }
 
@@ -98,13 +98,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient("live-test")
-                .secret(passwordEncoder.encode("abcde"))
-                .authorizedGrantTypes("password", "refresh_token")
-                .refreshTokenValiditySeconds(30 * 24 * 3600)
-                .scopes("app")
-                .accessTokenValiditySeconds(7 * 24 * 60);
+        clients.jdbc(dataSource)
+//                .withClient("vaibhav")
+//                .secret(passwordEncoder.encode("kamal"))
+//                .authorizedGrantTypes("password", "refresh_token")
+//                .refreshTokenValiditySeconds(30 * 24 * 3600)
+//                .scopes("app")
+//                .accessTokenValiditySeconds(7 * 24 * 60);
+        ;
     }
 
 

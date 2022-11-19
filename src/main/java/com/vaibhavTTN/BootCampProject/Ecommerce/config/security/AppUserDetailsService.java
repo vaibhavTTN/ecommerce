@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.service;
+package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
 
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
