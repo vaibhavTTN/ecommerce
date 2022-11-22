@@ -16,4 +16,7 @@ public class ApplicationProperties {
 
     @Value(("${spring.mail.username}"))
     private String senderEmail;
+
+    @Value(("${admin.email}"))
+    private String adminEmail;
 }

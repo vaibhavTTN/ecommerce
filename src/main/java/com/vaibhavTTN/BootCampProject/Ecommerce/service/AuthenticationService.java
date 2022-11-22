@@ -51,13 +51,22 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(email.getEmail())
                 .orElseThrow(()-> new UserNotFoundException("Email invalid"));
 
-        ConfirmationToken confirmationToken = tokenRepository
-                .findByUser(user).get();
 
-        tokenRepository.delete(confirmationToken);
+        Long confirmationTokenCount = tokenRepository.count();
+        if(confirmationTokenCount>0){
+            ConfirmationToken confirmationToken = tokenRepository
+                    .findByUser(user).get();
+            if(confirmationToken!=null){
+                tokenRepository.delete(confirmationToken);
+            }
+        }
 
         if(Boolean.FALSE.equals(user.getIsActive())){
             throw new UserIsNotActive("User is not Active");
+        }
+
+        if(Boolean.TRUE.equals(user.getIsLocked())){
+            throw new UserIsNotActive("User Account is Locked");
         }
 
         try {
@@ -88,7 +97,7 @@ public class AuthenticationService {
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(resetPassword.getPassword()));
-        user.setModifiedOn(LocalDateTime.now().toString());
+        user.setModifiedOn(LocalDateTime.now());
         userRepository.save(user);
 
         tokenRepository.delete(confirmationToken);

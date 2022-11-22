@@ -75,6 +75,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         endpoints.tokenStore(tokenStore()).userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager)
                 .accessTokenConverter(accessTokenConverter());
+//                .pathMapping("/oauth/token", "/login");
     }
 
     @Bean
@@ -104,7 +105,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 //                .authorizedGrantTypes("password", "refresh_token")
 //                .refreshTokenValiditySeconds(30 * 24 * 3600)
 //                .scopes("app")
-//                .accessTokenValiditySeconds(7 * 24 * 60);
+//                .accessTokenValiditySeconds(7 * 24 * 60)
         ;
     }
 

@@ -36,7 +36,7 @@ public class EmailSenderService {
     ApplicationProperties applicationProperties;
 
     @Async
-    public void sendEmailVerificationCustomer(User user) throws MailException, InterruptedException {
+    public void sendEmailVerificationCustomer(User user) throws MailException {
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user, LocalDateTime.now().plusHours(3));
         tokenRepository.save(confirmationToken);
@@ -58,13 +58,13 @@ public class EmailSenderService {
     }
 
     @Async
-    public void sendEmailVerificationSeller(User user) throws MailException, InterruptedException {
+    public void sendEmailVerificationSeller(User user) throws MailException {
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user,LocalDateTime.now().plusWeeks(1));
         tokenRepository.save(confirmationToken);
 
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo("vaibhavkamal01@gmail.com");
+        mail.setTo(applicationProperties.getAdminEmail());
         mail.setFrom(applicationProperties.getSenderEmail());
         mail.setSubject("Activate the Seller");
         mail.setText("Click this Link For Activation :: \n");
@@ -80,7 +80,7 @@ public class EmailSenderService {
     }
 
     @Async
-    public void sendVerifiedEmail(User user) throws MailException, InterruptedException {
+    public void sendVerifiedEmail(User user) throws MailException {
 
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(user.getEmail());
@@ -96,7 +96,7 @@ public class EmailSenderService {
 
 
     @Async
-    public void sendEmailForgetPassword(User user) throws MailException, InterruptedException {
+    public void sendEmailForgetPassword(User user) throws MailException {
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user,LocalDateTime.now().plusMinutes(15));
         tokenRepository.save(confirmationToken);
@@ -113,7 +113,7 @@ public class EmailSenderService {
     }
 
     @Async
-    public void sendPasswordUpdated(User user) throws MailException, InterruptedException {
+    public void sendPasswordUpdated(User user) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(user.getEmail());
         mail.setSubject("Password Updated!");
@@ -125,7 +125,7 @@ public class EmailSenderService {
     }
 
     @Async
-    public void sendCustomEmail(User user,String subject,String message) throws MailException, InterruptedException {
+    public void sendCustomEmail(User user,String subject,String message) throws MailException {
 
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(user.getEmail());
@@ -136,4 +136,6 @@ public class EmailSenderService {
 
         logger.debug("Email Sent for {} : to : {} ",subject,user.getEmail());
     }
+
+
 }

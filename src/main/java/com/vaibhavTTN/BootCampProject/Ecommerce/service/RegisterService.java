@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -132,12 +133,14 @@ public class RegisterService {
         user.setMiddleName(customerDetails.getMiddleName());
         user.setLastName(customerDetails.getLastName());
         user.setPassword(bCryptPasswordEncoder.encode(customerDetails.getPassword()));
-        user.setPasswordUpdatedDate(formatter.format(date));
+        user.setPasswordUpdatedDate(LocalDateTime.now());
         user.setCreatedBy(role.getAuthority());
         user.setModifiedBy(role.getAuthority());
-        user.setModifiedOn(formatter.format(date));
-        user.setCreatedOn(formatter.format(date));
+        user.setModifiedOn(LocalDateTime.now());
+        user.setCreatedOn(LocalDateTime.now());
         user.setInvalidAttemptCount(0);
+        user.setIsLocked(false);
+        user.setIsActive(false);
 
         Customer customer = new Customer();
         customer.setContact(customerDetails.getContact());
@@ -180,12 +183,14 @@ public class RegisterService {
         user.setMiddleName(sellerDetails.getMiddleName());
         user.setLastName(sellerDetails.getLastName());
         user.setPassword(bCryptPasswordEncoder.encode(sellerDetails.getPassword()));
-        user.setPasswordUpdatedDate(formatter.format(date));
+        user.setPasswordUpdatedDate(LocalDateTime.now());
         user.setCreatedBy(role.getAuthority());
         user.setModifiedBy(role.getAuthority());
-        user.setModifiedOn(formatter.format(date));
-        user.setCreatedOn(formatter.format(date));
+        user.setModifiedOn(LocalDateTime.now());
+        user.setCreatedOn(LocalDateTime.now());
         user.setInvalidAttemptCount(0);
+        user.setIsLocked(false);
+        user.setIsActive(false);
 
         Seller seller = new Seller();
         seller.setGst(sellerDetails.getGst());
@@ -205,12 +210,13 @@ public class RegisterService {
 
         seller.setUser(user);
 
+        sellerRepository.save(seller);
+
         try {
             senderService.sendEmailVerificationSeller(user);
         }catch( Exception e ){
             logger.error("Error in sending Email by sendEmailVerificationSeller method \n {} ",e.getMessage());
         }
 
-        sellerRepository.save(seller);
     }
 }

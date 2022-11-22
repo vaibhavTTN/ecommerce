@@ -9,21 +9,18 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+//@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
 public class EcommerceApplication {
 
-	@Bean
-	public AuditorAware<String> auditorAware() {
-		return new SpringSecurityAuditorAware();
-	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
 
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
+//	@Bean
+//	public ModelMapper modelMapper() {
+//		return new ModelMapper();
+//	}
 }

@@ -26,8 +26,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     UserDetailsService userDetailsService;
 
-
-
     public ResourceServerConfiguration() {
         super();
     }
@@ -54,12 +52,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .mvcMatchers(HttpMethod.GET,"/register/**").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/register/customer").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/register/seller").permitAll()
                 .mvcMatchers(HttpMethod.PUT,"/register/verify/**").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/register/re-verify/**").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/forget-password").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/reset-password").permitAll()
+                .mvcMatchers(HttpMethod.PUT,"/reset-password").permitAll()
+                .mvcMatchers(HttpMethod.GET,"/admin/**").permitAll()
+                .mvcMatchers(HttpMethod.PUT,"/admin/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

@@ -5,6 +5,8 @@ import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerDetails;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.EmailDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerDetails;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import com.vaibhavTTN.BootCampProject.Ecommerce.enums.Roles;
+import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,9 @@ public class RegisterController {
 
     @Autowired
     RegisterService registerService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @PutMapping("/verify/{token}")
     public ResponseEntity<String> verify(@PathVariable("token") String token){
@@ -57,6 +62,11 @@ public class RegisterController {
                 .toUri();
         return ResponseEntity.created(location).build();
     }
+
+//    @GetMapping("/role")
+//    public int role(){
+//        return .findRoleId(Roles.ROLE_CUSTOMER.toString());
+//    }
 
 
 }

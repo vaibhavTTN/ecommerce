@@ -2,6 +2,7 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.event;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import com.vaibhavTTN.BootCampProject.Ecommerce.enums.Roles;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.RoleRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -40,19 +42,19 @@ public class Bootstrap implements ApplicationRunner {
 
         Role role_admin = new Role();
         role_admin.setId(1L);
-        role_admin.setAuthority("ROLE_ADMIN");
+        role_admin.setAuthority(Roles.ROLE_ADMIN.toString());
         role_admin.setIsDeleted(false);
         roleRepository.save(role_admin);
 
         Role role_customer = new Role();
         role_admin.setId(2L);
-        role_customer.setAuthority("ROLE_CUSTOMER");
+        role_customer.setAuthority(Roles.ROLE_CUSTOMER.toString());
         role_customer.setIsDeleted(false);
         roleRepository.save(role_customer);
 
         Role role_seller = new Role();
         role_admin.setId(3L);
-        role_seller.setAuthority("ROLE_SELLER");
+        role_seller.setAuthority(Roles.ROLE_SELLER.toString());
         role_seller.setIsDeleted(false);
         roleRepository.save(role_seller);
 
@@ -61,14 +63,17 @@ public class Bootstrap implements ApplicationRunner {
         user.setFirstName("Admin");
         user.setLastName("Admin");
         user.setPassword(bCryptPasswordEncoder.encode("1234"));
-        user.setPasswordUpdatedDate(formatter.format(date));
+        user.setPasswordUpdatedDate(LocalDateTime.now());
 
-        Role roleAdmin = roleRepository.findByAuthority("ROLE_ADMIN").get();
+        Role roleAdmin = roleRepository.findByAuthority(Roles.ROLE_ADMIN.toString()).get();
 
         user.setCreatedBy(roleAdmin.getAuthority());
         user.setModifiedBy(roleAdmin.getAuthority());
-        user.setModifiedOn(formatter.format(date));
-        user.setCreatedOn(formatter.format(date));
+        user.setModifiedOn(LocalDateTime.now());
+        user.setCreatedOn(LocalDateTime.now());
+        user.setIsDelete(false);
+        user.setIsActive(true);
+        user.setIsLocked(false);
         user.setInvalidAttemptCount(0);
 
         user.setRole(roleAdmin);

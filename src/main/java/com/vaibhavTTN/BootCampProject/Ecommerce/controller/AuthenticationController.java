@@ -25,19 +25,19 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> customerLogin(@RequestBody @Valid Login login){
-        Authentication authentication = authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                            login.getUsername(), login.getPassword()
-                        )
-                );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return new ResponseEntity<>("User Login successfully!.", HttpStatus.OK);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> customerLogin(@RequestBody @Valid Login login){
+//        Authentication authentication = authenticationManager
+//                .authenticate(
+//                        new UsernamePasswordAuthenticationToken(
+//                            login.getUsername(), login.getPassword()
+//                        )
+//                );
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        return new ResponseEntity<>("User Login successfully!.", HttpStatus.OK);
+//    }
 
 
     @GetMapping("/do-logout")

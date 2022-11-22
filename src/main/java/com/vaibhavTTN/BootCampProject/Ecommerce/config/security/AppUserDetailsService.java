@@ -3,6 +3,7 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserNotFoundException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,8 +24,8 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("heello");
-        User user = userRepository.findByEmail(username).get();
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(()->new UserNotFoundException("invalid email"));
 
         if(user==null){
             throw new UsernameNotFoundException("Invalid Credential :: " + username);

@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne
     private Role role;
@@ -44,9 +46,9 @@ public class User {
 
     private String createdBy;
 
-    private String createdOn;
+    private LocalDateTime createdOn;
 
-    private String modifiedOn;
+    private LocalDateTime modifiedOn;
 
     @Column(columnDefinition = "boolean default false")
     private Boolean isActive;
@@ -57,11 +59,13 @@ public class User {
     @Column(columnDefinition = "boolean default false")
     private Boolean isLocked;
 
-    @Column(columnDefinition = "integer default 0")
-    private Integer invalidAttemptCount;
+    private int invalidAttemptCount;
+
+    @Column(nullable = true)
+    private Date lockTime;
 
     @NotNull
     @Column(nullable = false)
-    private String passwordUpdatedDate;
+    private LocalDateTime passwordUpdatedDate;
 
 }
