@@ -14,6 +14,12 @@ import com.vaibhavTTN.BootCampProject.Ecommerce.properties.ApplicationProperties
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.AddressRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.SellerRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +27,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class SellerService {
@@ -54,6 +51,7 @@ public class SellerService {
     @Autowired
     ApplicationProperties applicationProperties;
 
+
     public SellerProfileDto getSellerProfile(Authentication authentication){
         SellerProfileDto sellerProfileDto = new SellerProfileDto();
         String username =  authentication.getName();
@@ -70,6 +68,8 @@ public class SellerService {
         sellerProfileDto.setCompanyName(seller.getCompanyName());
         sellerProfileDto.setCompanyContact(seller.getCompanyContact());
         sellerProfileDto.setIsActive(user.getIsActive());
+        sellerProfileDto.setImage(
+            applicationProperties.getUrl() + "seller" + File.separator + "image");
 
         return sellerProfileDto;
     }
@@ -96,29 +96,32 @@ public class SellerService {
         try{
             emailSenderService.sendCustomEmail(
                     user,
-                    "Password Updated !",
-                    "Dear "+user.getFirstName()+" \n Your password is Updated."
+                "Password Updated !",
+                "Dear " + user.getFirstName() + " \n Your password is Updated."
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
 
         return "Your Password is Updated SuccessFully";
     }
 
-    public String updateSellerAddress(Long id,Address requestAddress) {
-        Address address = addressRepository.findById(id)
-                .orElseThrow(()->new CustomException("Invalid Address Id"));
+    public String updateSellerAddress(Authentication authentication, Long id,
+        Address requestAddress) {
+        User user = userRepository.findByEmail(authentication.getName())
+            .orElseThrow(() -> new UserNotFoundException("invalid email"));
 
-        if(requestAddress.getAddressLine()!=null){
+        Address address = user.getAddress().get(0);
+
+        if (requestAddress.getAddressLine() != null) {
             address.setAddressLine(requestAddress.getAddressLine());
         }
 
-        if(requestAddress.getCity()!=null){
+        if (requestAddress.getCity() != null) {
             address.setCity(requestAddress.getCity());
         }
 
-        if(requestAddress.getCity()!=null){
+        if (requestAddress.getCity() != null) {
             address.setCity(requestAddress.getCity());
         }
 
@@ -142,6 +145,7 @@ public class SellerService {
             Authentication authentication,
             MultipartFile file
     ) throws IOException {
+
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(()->new CustomException("Email invalid"));
 
@@ -159,18 +163,31 @@ public class SellerService {
             throw new CustomException("File must contain Extension");
         }
 
-        switch (extension){
-            case "jpg":break;
-            case "bmp":break;
-            case "png": break;
-            case "jpeg": break;
-            default:  throw new CustomException("File must contain Extension");
+        switch (extension) {
+            case "jpg":
+                break;
+            case "bmp":
+                break;
+            case "png":
+                break;
+            case "jpeg":
+                break;
+            default:
+                throw new CustomException("File must contain Extension");
         }
 
         Random random = new Random();
-        fileName = applicationProperties.getImageSellerPath() +File.separator+ user.getFirstName() +random.nextInt(99999)+"."+extension;
+        fileName = applicationProperties.getImageUserPath() + File.separator + user.getId() + "."
+            + extension;
 
-        File directory = new File(System.getProperty("user.dir")+applicationProperties.getImageSellerPath());
+        File f = new File(fileName);
+
+        if (f.delete()) {
+            logger.debug("fileee deleted");
+        }
+
+        File directory = new File(
+            System.getProperty("user.dir") + applicationProperties.getImageUserPath());
         if (!directory.exists()) {
             try {
                 directory.mkdir();
@@ -179,7 +196,7 @@ public class SellerService {
             }
         }
 
-        final String path = System.getProperty("user.dir")+ fileName;
+        final String path = System.getProperty("user.dir") + fileName;
         try (InputStream inputStream = file.getInputStream();
              FileOutputStream fileOutputStream = new FileOutputStream(new File(path))) {
             byte[] buf = new byte[1024];
@@ -223,7 +240,7 @@ public class SellerService {
             user.setMiddleName(sellerProfileDto.getMiddleName());
         }
 
-        if(sellerProfileDto.getLastName()!=null){
+        if (sellerProfileDto.getLastName() != null) {
             user.setLastName(user.getLastName());
         }
 
@@ -231,5 +248,21 @@ public class SellerService {
         sellerRepository.save(seller);
 
         return "Seller Profile is Updated";
+    }
+
+    public String getImage(Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName())
+            .orElseThrow(() -> new CustomException("Email invalid"));
+
+        File f = new File(System.getProperty("user.dir") + File.separator
+            + applicationProperties.getImageUserPath());
+
+        File[] matchingFiles = f.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.startsWith(user.getId().toString());
+            }
+        });
+
+        return matchingFiles[0].getName();
     }
 }

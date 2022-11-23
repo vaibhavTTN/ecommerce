@@ -15,25 +15,18 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String city;
 
-    @Column(nullable = false)
     private String state;
 
-    @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false)
     private String addressLine;
 
-    @Column(nullable = false)
     private String zipCode;
 
-    @Column(nullable = false)
     private String label;
 
-    @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
 }

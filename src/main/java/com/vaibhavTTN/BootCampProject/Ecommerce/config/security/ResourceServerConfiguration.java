@@ -51,7 +51,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+            .authorizeRequests()
+            .mvcMatchers(HttpMethod.GET, "/**").permitAll()
                 .mvcMatchers(HttpMethod.GET,"/register/**").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/register/customer").permitAll()
                 .mvcMatchers(HttpMethod.POST,"/register/seller").permitAll()

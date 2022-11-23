@@ -1,32 +1,34 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllCustomerDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllSellerDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.controller.AdminController;
-import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Customer;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Seller;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.enums.Roles;
+import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.CustomException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserIsAlreadyActive;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserNotFoundException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.CustomerRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.RoleRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.SellerRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class AdminService {
@@ -74,21 +76,22 @@ public class AdminService {
 
         Pageable pageable = pagination(page,size,sort);
 
-        if(email!=null){
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(()->new UserNotFoundException("Invalid Email"));
+        if(email!=null) {
+          User user = userRepository.findByEmail(email)
+              .orElseThrow(() -> new UserNotFoundException("Invalid Email"));
 
-            final Customer customer = customerRepository.findByUser(user);
+          final Customer customer = customerRepository.findByUser(user)
+              .orElseThrow(() -> new CustomException("Email invalid"));
 
-            List<AllCustomerDto> customerDtos = List.of(user)
-                .stream()
-                .filter(e->e.getRole().getAuthority().equals(Roles.ROLE_CUSTOMER.toString()))
-                .map((e->{
-                    AllCustomerDto allCustomerDto = new AllCustomerDto();
-                    String fullName = "";
-                    if(e.getMiddleName()==null){
-                        fullName += e.getFirstName() + " " + e.getLastName();
-                    }else{
+          List<AllCustomerDto> customerDtos = List.of(user)
+              .stream()
+              .filter(e -> e.getRole().getAuthority().equals(Roles.ROLE_CUSTOMER.toString()))
+              .map((e -> {
+                AllCustomerDto allCustomerDto = new AllCustomerDto();
+                String fullName = "";
+                if (e.getMiddleName() == null) {
+                  fullName += e.getFirstName() + " " + e.getLastName();
+                } else {
                         fullName += e.getFirstName()+" ";
                         fullName += e.getMiddleName() + " ";
                         fullName += e.getLastName();
