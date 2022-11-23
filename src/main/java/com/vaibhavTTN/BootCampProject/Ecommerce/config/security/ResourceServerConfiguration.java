@@ -60,6 +60,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .mvcMatchers(HttpMethod.POST,"/forget-password").permitAll()
                 .mvcMatchers(HttpMethod.PUT,"/reset-password").permitAll()
                 .mvcMatchers(HttpMethod.GET,"/admin/**").permitAll()
+                .mvcMatchers(HttpMethod.PATCH,"/admin/**").permitAll()
                 .mvcMatchers(HttpMethod.PUT,"/admin/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

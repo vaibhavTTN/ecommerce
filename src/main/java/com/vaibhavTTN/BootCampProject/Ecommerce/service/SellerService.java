@@ -1,12 +1,17 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
+import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerUpdateProfileDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.UpdatePassword;
 import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.SellerProfileDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Seller;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.CustomException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.PasswordMatchException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserNotFoundException;
+import com.vaibhavTTN.BootCampProject.Ecommerce.properties.ApplicationProperties;
+import com.vaibhavTTN.BootCampProject.Ecommerce.repository.AddressRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.SellerRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import org.slf4j.Logger;
@@ -15,6 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.Multipart;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class SellerService {
@@ -32,6 +45,12 @@ public class SellerService {
 
     @Autowired
     EmailSenderService emailSenderService;
+
+    @Autowired
+    AddressRepository addressRepository;
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
     public SellerProfileDto getSellerProfile(Authentication authentication){
         SellerProfileDto sellerProfileDto = new SellerProfileDto();
@@ -61,7 +80,6 @@ public class SellerService {
 
         Seller seller = sellerRepository.findByUser(user);
 
-        logger.debug(updatePassword.getConfirmPassword()+"heelo");
         if(!bCryptPasswordEncoder.matches(updatePassword.getCurrentPassword(),user.getPassword())){
             throw new PasswordMatchException("invalid Credential");
         }
@@ -86,4 +104,91 @@ public class SellerService {
         return "Your Password is Updated SuccessFully";
     }
 
+    public String updateSellerAddress(Long id,Address requestAddress) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(()->new CustomException("Invalid Address Id"));
+
+        if(requestAddress.getAddressLine()!=null){
+            address.setAddressLine(requestAddress.getAddressLine());
+        }
+
+        if(requestAddress.getCity()!=null){
+            address.setCity(requestAddress.getCity());
+        }
+
+        if(requestAddress.getCity()!=null){
+            address.setCity(requestAddress.getCity());
+        }
+
+        if(requestAddress.getLabel()!=null){
+            address.setLabel(requestAddress.getLabel());
+        }
+
+        if(requestAddress.getState()!=null){
+            address.setState(requestAddress.getState());
+        }
+
+        if(requestAddress.getZipCode()!=null){
+            address.setZipCode(requestAddress.getZipCode());
+        }
+
+        addressRepository.save(address);
+        return "Address is updated successfully";
+    }
+
+    public String updateSellerProfile(
+            Authentication authentication,
+            MultipartFile file
+//            SellerUpdateProfileDto sellerProfileDto
+    ) throws IOException {
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(()->new CustomException("Email invalid"));
+
+        String name = file.getOriginalFilename();
+//        String br[] =name.split("-");
+//        System.out.println("heelo"+name+br.length);
+        String extention = ".jpg";//br[br.length];
+        File directory = new File(System.getProperty("user.dir"));
+        if (!directory.exists()) {
+            try {
+                directory.mkdir();
+            } catch (SecurityException se) {
+                return null;
+            }
+        }
+        String fileName = applicationProperties.getImagePath() + user.getFirstName() + File.separator +UUID.randomUUID().toString()+"."+extention;
+        final String path = System.getProperty("user.dir") + File.separator + fileName;
+        Files.copy(file.getInputStream(), Paths.get(path));
+
+//        Seller seller = sellerRepository.findByUser(user);
+
+//        if(sellerProfileDto.getCompanyContact()!=null){
+//            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
+//        }
+//
+//        if(sellerProfileDto.getCompanyName()!=null){
+//            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
+//        }
+//
+//        if(sellerProfileDto.getGst()!=null){
+//            seller.setGst(sellerProfileDto.getGst());
+//        }
+//
+//        if(sellerProfileDto.getFirstName()!=null){
+//            user.setFirstName(sellerProfileDto.getFirstName());
+//        }
+//
+//        if(sellerProfileDto.getMiddleName()!=null){
+//            user.setMiddleName(sellerProfileDto.getMiddleName());
+//        }
+//
+//        if(sellerProfileDto.getLastName()!=null){
+//            user.setLastName(user.getLastName());
+//        }
+//
+//        userRepository.save(user);
+//        sellerRepository.save(seller);
+
+        return "Seller Profile is Updated";
+    }
 }

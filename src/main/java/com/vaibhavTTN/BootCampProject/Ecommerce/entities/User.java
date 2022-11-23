@@ -64,6 +64,7 @@ public class User {
     @Column(nullable = true)
     private Date lockTime;
 
+
     @NotNull
     @Column(nullable = false)
     private LocalDateTime passwordUpdatedDate;

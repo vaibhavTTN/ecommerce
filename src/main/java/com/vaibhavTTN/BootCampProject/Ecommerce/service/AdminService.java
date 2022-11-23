@@ -52,8 +52,11 @@ public class AdminService {
 
         page = (page==null)?0:page;
         size = (size==null)?10:size;
-        sort[0] = (sort[0]==null)?"id":sort[0];
-        sort[1] = (sort[1]==null)?"asc":sort[1];
+        if(sort.length==0){
+            sort = new String[2];
+            sort[0] = (sort[0]==null)?"id":sort[0];
+            sort[1] = (sort[1]==null)?"asc":sort[1];
+        }
 
         Sort sortBy;
         if(sort[1].equals("asc")){
@@ -154,6 +157,7 @@ public class AdminService {
     }
 
     public Page<AllSellerDto> AllSellerList(Integer page, Integer size, String[] sort, String email){
+
 
         logger.debug("Page No {} , Page Size {}, SortProperty {}, sortDirection {}, Email {}",page,size,sort,email);
 

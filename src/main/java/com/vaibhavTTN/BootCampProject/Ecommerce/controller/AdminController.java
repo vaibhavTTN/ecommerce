@@ -11,10 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -35,24 +32,22 @@ public class AdminController {
     public PagedModel<EntityModel<AllCustomerDto>> customers(
             @Param("page") Integer page,
             @Param("size") Integer size,
-            @Param("sort") String[] sort,
+            @RequestParam(value = "sort",defaultValue = "id,asc") String[] sort,
             @Param("email") String email)
     {
        Page<AllCustomerDto> customerPage = adminService.AllCustomerList(page,size,sort,email);
-       PagedModel<EntityModel<AllCustomerDto>> pagedModel = allCustomerDtoPagedResourcesAssembler.toModel(customerPage);
-       return pagedModel;
+        return allCustomerDtoPagedResourcesAssembler.toModel(customerPage);
     }
 
     @GetMapping("/sellers")
     public PagedModel<EntityModel<AllSellerDto>> sellers(
             @Param("page") Integer page,
             @Param("size") Integer size,
-            @Param("sort") String[] sort,
+            @RequestParam(value = "sort",defaultValue = "id,asc") String[] sort,
             @Param("email") String email)
     {
         Page<AllSellerDto> sellerPage = adminService.AllSellerList(page,size,sort,email);
-        PagedModel<EntityModel<AllSellerDto>> pagedModel = allSellerDtoPagedResourcesAssembler.toModel(sellerPage);
-        return pagedModel;
+        return allSellerDtoPagedResourcesAssembler.toModel(sellerPage);
     }
 
     @PatchMapping("/customer/activate/{id}")

@@ -19,4 +19,7 @@ public class ApplicationProperties {
 
     @Value(("${admin.email}"))
     private String adminEmail;
+
+    @Value(("${document.image.path}"))
+    private String imagePath;
 }
