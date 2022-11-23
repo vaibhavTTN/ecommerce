@@ -54,16 +54,24 @@ public class SellerController {
         return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
 
+    @PatchMapping("/update-image")
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
+    public ResponseEntity<String> updateSellerProfileImage(
+            Authentication authentication,
+            @RequestParam("image") MultipartFile file
+    ) throws IOException {
+        String message = sellerService.updateSellerProfileImage(authentication,file);
+        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+    }
+
     @PatchMapping("/update-profile")
     @PreAuthorize("hasAuthority('ROLE_SELLER')")
     public ResponseEntity<String> updateSellerProfile(
             Authentication authentication,
-            @RequestParam("image") MultipartFile file
-//            @RequestParam SellerUpdateProfileDto sellerProfileDto
+            @RequestBody SellerUpdateProfileDto sellerUpdateProfileDto
     ) throws IOException {
-        String message = sellerService.updateSellerProfile(authentication,file);
-//        String message = sellerService.updateSellerProfile(authentication,sellerProfileDto);
-        return new ResponseEntity<>("Done", HttpStatus.ACCEPTED);
+        String message = sellerService.sellerUpdateProfile(authentication,sellerUpdateProfileDto);
+        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/dir")

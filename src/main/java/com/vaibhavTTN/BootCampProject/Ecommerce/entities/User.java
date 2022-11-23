@@ -69,4 +69,6 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime passwordUpdatedDate;
 
+    private String image;
+
 }

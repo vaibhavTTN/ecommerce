@@ -22,11 +22,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.Multipart;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -136,19 +138,39 @@ public class SellerService {
         return "Address is updated successfully";
     }
 
-    public String updateSellerProfile(
+    public String updateSellerProfileImage(
             Authentication authentication,
             MultipartFile file
-//            SellerUpdateProfileDto sellerProfileDto
     ) throws IOException {
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(()->new CustomException("Email invalid"));
 
         String name = file.getOriginalFilename();
-//        String br[] =name.split("-");
-//        System.out.println("heelo"+name+br.length);
-        String extention = ".jpg";//br[br.length];
-        File directory = new File(System.getProperty("user.dir"));
+        String extension = "";
+        String fileName = file.getOriginalFilename();
+
+        int index = fileName.lastIndexOf('.');
+        if(index > 0) {
+            extension = fileName.substring(index + 1);
+            System.out.println("File extension is " + extension);
+        }
+
+        if(extension.equals("")){
+            throw new CustomException("File must contain Extension");
+        }
+
+        switch (extension){
+            case "jpg":break;
+            case "bmp":break;
+            case "png": break;
+            case "jpeg": break;
+            default:  throw new CustomException("File must contain Extension");
+        }
+
+        Random random = new Random();
+        fileName = applicationProperties.getImageSellerPath() +File.separator+ user.getFirstName() +random.nextInt(99999)+"."+extension;
+
+        File directory = new File(System.getProperty("user.dir")+applicationProperties.getImageSellerPath());
         if (!directory.exists()) {
             try {
                 directory.mkdir();
@@ -156,38 +178,57 @@ public class SellerService {
                 return null;
             }
         }
-        String fileName = applicationProperties.getImagePath() + user.getFirstName() + File.separator +UUID.randomUUID().toString()+"."+extention;
-        final String path = System.getProperty("user.dir") + File.separator + fileName;
-        Files.copy(file.getInputStream(), Paths.get(path));
 
-//        Seller seller = sellerRepository.findByUser(user);
+        final String path = System.getProperty("user.dir")+ fileName;
+        try (InputStream inputStream = file.getInputStream();
+             FileOutputStream fileOutputStream = new FileOutputStream(new File(path))) {
+            byte[] buf = new byte[1024];
+            int numRead = 0;
+            while ((numRead = inputStream.read(buf)) >= 0) {
+                fileOutputStream.write(buf, 0, numRead);
+            }
+        } catch (Exception e) {
+            return null;
+        }
 
-//        if(sellerProfileDto.getCompanyContact()!=null){
-//            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
-//        }
-//
-//        if(sellerProfileDto.getCompanyName()!=null){
-//            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
-//        }
-//
-//        if(sellerProfileDto.getGst()!=null){
-//            seller.setGst(sellerProfileDto.getGst());
-//        }
-//
-//        if(sellerProfileDto.getFirstName()!=null){
-//            user.setFirstName(sellerProfileDto.getFirstName());
-//        }
-//
-//        if(sellerProfileDto.getMiddleName()!=null){
-//            user.setMiddleName(sellerProfileDto.getMiddleName());
-//        }
-//
-//        if(sellerProfileDto.getLastName()!=null){
-//            user.setLastName(user.getLastName());
-//        }
-//
-//        userRepository.save(user);
-//        sellerRepository.save(seller);
+        return "Seller Profile image is Updated";
+    }
+
+    public String sellerUpdateProfile(
+            Authentication authentication,
+            SellerUpdateProfileDto sellerProfileDto
+    ){
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(()->new CustomException("Email invalid"));
+
+        Seller seller = sellerRepository.findByUser(user);
+
+        if(sellerProfileDto.getCompanyContact()!=null){
+            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
+        }
+
+        if(sellerProfileDto.getCompanyName()!=null){
+            seller.setCompanyContact(sellerProfileDto.getCompanyContact());
+        }
+
+        if(sellerProfileDto.getGst()!=null){
+            seller.setGst(sellerProfileDto.getGst());
+        }
+
+        if(sellerProfileDto.getFirstName()!=null){
+            user.setFirstName(sellerProfileDto.getFirstName());
+        }
+
+        if(sellerProfileDto.getMiddleName()!=null){
+            user.setMiddleName(sellerProfileDto.getMiddleName());
+        }
+
+        if(sellerProfileDto.getLastName()!=null){
+            user.setLastName(user.getLastName());
+        }
+
+        userRepository.save(user);
+        sellerRepository.save(seller);
 
         return "Seller Profile is Updated";
     }
