@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Getter
 public class ApplicationProperties {
 
-    @Value("${app.url}")
-    private String url;
+  @Value("${app.url}")
+  private String url;
 
   @Value("${email.verification.url}")
   private String emailVerifyUrl;

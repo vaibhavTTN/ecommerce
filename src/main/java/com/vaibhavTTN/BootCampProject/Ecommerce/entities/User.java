@@ -17,66 +17,65 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+//@SQLDelete(sql = "UPDATE table_product SET isDeleted = true WHERE id=?")
+//@Where(clause = "isDeleted=false")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    private Role role;
+  @ManyToOne
+  private Role role;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Address> address;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  private List<Address> address;
 
-    @Column(unique = true, updatable = false)
-    private String email;
+  @Column(unique = true, updatable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String firstName;
+  @Column(nullable = false)
+  private String firstName;
 
-    private String middleName;
+  private String middleName;
 
-    @Column(nullable = false)
-    private String lastName;
+  @Column(nullable = false)
+  private String lastName;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String password;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isDelete;
+  private String modifiedBy;
 
-    private String modifiedBy;
+  private String createdBy;
 
-    private String createdBy;
+  private LocalDateTime createdAt;
 
-    private LocalDateTime createdOn;
+  private LocalDateTime modifiedAt;
 
-    private LocalDateTime modifiedOn;
+  private Boolean isDelete = Boolean.FALSE;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isActive;
+  private Boolean isActive=Boolean.FALSE;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isExpired;
+  private Boolean isExpired=Boolean.FALSE;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isLocked;
+  private Boolean isLocked=Boolean.FALSE;
 
-    private int invalidAttemptCount;
+  private int invalidAttemptCount;
 
-    @Column(nullable = true)
-    private Date lockTime;
+  @Column(nullable = true)
+  private Date lockTime;
 
-
-    @NotNull
-    @Column(nullable = false)
-    private LocalDateTime passwordUpdatedDate;
+  @NotNull
+  @Column(nullable = false)
+  private LocalDateTime passwordUpdatedDate;
 
 }

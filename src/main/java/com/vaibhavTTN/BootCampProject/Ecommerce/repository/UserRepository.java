@@ -1,14 +1,14 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.repository;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface UserRepository extends JpaRepository<User, Long> {
 
-public interface UserRepository extends JpaRepository<User,Long> {
-    long count();
+  long count();
 
-    Optional<User> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
 
 }

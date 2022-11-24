@@ -23,51 +23,52 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    UserDetailsService userDetailsService;
+  @Autowired
+  UserDetailsService userDetailsService;
 
-    public ResourceServerConfiguration() {
-        super();
-    }
+  public ResourceServerConfiguration() {
+    super();
+  }
 
-    @Bean
-    public static BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public static BCryptPasswordEncoder bCryptPasswordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        return authenticationProvider;
-    }
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+    return authenticationProvider;
+  }
 
-    @Autowired
-    public void configureGlobal(final AuthenticationManagerBuilder authenticationManagerBuilder) {
-        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
-    }
+  @Autowired
+  public void configureGlobal(final AuthenticationManagerBuilder authenticationManagerBuilder) {
+    authenticationManagerBuilder.authenticationProvider(authenticationProvider());
+  }
 
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests()
-            .mvcMatchers(HttpMethod.GET, "/**").permitAll()
-                .mvcMatchers(HttpMethod.GET,"/register/**").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/register/customer").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/register/seller").permitAll()
-                .mvcMatchers(HttpMethod.PUT,"/register/verify/**").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/register/re-verify/**").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/forget-password").permitAll()
-                .mvcMatchers(HttpMethod.PUT,"/reset-password").permitAll()
-                .mvcMatchers(HttpMethod.GET,"/admin/**").permitAll()
-                .mvcMatchers(HttpMethod.PATCH,"/admin/**").permitAll()
-                .mvcMatchers(HttpMethod.PUT,"/admin/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .csrf().disable().logout().logoutSuccessUrl("/");
-    }
+  @Override
+  public void configure(final HttpSecurity http) throws Exception {
+    http
+        .authorizeRequests()
+        .mvcMatchers(HttpMethod.GET, "/**").permitAll()
+        .mvcMatchers(HttpMethod.GET, "/register/**").permitAll()
+        .mvcMatchers(HttpMethod.POST, "/register/customer").permitAll()
+        .mvcMatchers(HttpMethod.POST, "/register/seller").permitAll()
+        .mvcMatchers(HttpMethod.PUT, "/register/verify/**").permitAll()
+        .mvcMatchers(HttpMethod.POST, "/register/re-verify/**").permitAll()
+        .mvcMatchers(HttpMethod.POST, "/forget-password").permitAll()
+        .mvcMatchers(HttpMethod.PUT, "/reset-password").permitAll()
+        .mvcMatchers(HttpMethod.GET, "/admin/**").permitAll()
+        .mvcMatchers(HttpMethod.PATCH, "/admin/**").permitAll()
+        .mvcMatchers(HttpMethod.PUT, "/admin/**").permitAll()
+//        .anyRequest().authenticated()
+        .anyRequest().permitAll()
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .csrf().disable().logout().logoutSuccessUrl("/");
+  }
 
 }

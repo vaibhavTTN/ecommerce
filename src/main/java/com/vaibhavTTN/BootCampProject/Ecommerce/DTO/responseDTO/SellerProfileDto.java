@@ -5,20 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerProfileDto {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Boolean IsActive;
-    private String companyContact;
-    private String companyName;
-    private String image;
-    private String GST;
-    private Address address;
+
+  private Long id;
+  private String firstName;
+  private String lastName;
+  private Boolean IsActive;
+  private String companyContact;
+  private String companyName;
+  private String image;
+  private String GST;
+  private Address address;
 }

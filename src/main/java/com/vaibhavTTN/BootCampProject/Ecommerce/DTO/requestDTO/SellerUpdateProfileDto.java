@@ -6,24 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.Multipart;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerUpdateProfileDto {
-    private String firstName;
 
-    private String middleName;
+  private String firstName;
 
-    private String lastName;
+  private String middleName;
 
-    private String gst;
+  private String lastName;
 
-    private String companyName;
+  private String gst;
 
-    private String companyContact;
+  private String companyName;
 
-    private MultipartFile image;
+  private String companyContact;
+
+  private MultipartFile image;
 }

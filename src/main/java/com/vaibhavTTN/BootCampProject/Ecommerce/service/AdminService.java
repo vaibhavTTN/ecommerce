@@ -33,324 +33,322 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
+  private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserRepository userRepository;
 
-    @Autowired
-    SellerRepository sellerRepository;
+  @Autowired
+  SellerRepository sellerRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
+  @Autowired
+  CustomerRepository customerRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+  @Autowired
+  RoleRepository roleRepository;
 
-    @Autowired
-    EmailSenderService emailSender;
+  @Autowired
+  EmailSenderService emailSender;
 
-    public Pageable pagination(Integer page,Integer size,String[] sort){
+  public Pageable pagination(Integer page, Integer size, String[] sort) {
 
-        page = (page==null)?0:page;
-        size = (size==null)?10:size;
-        if(sort.length==0){
-            sort = new String[2];
-            sort[0] = (sort[0]==null)?"id":sort[0];
-            sort[1] = (sort[1]==null)?"asc":sort[1];
-        }
-
-        Sort sortBy;
-        if(sort[1].equals("asc")){
-            sortBy = Sort.by(sort[0]).ascending();
-        }else {
-            sortBy = Sort.by(sort[0]).descending();
-        }
-
-        return PageRequest.of(page,size,sortBy);
+    page = (page == null) ? 0 : page;
+    size = (size == null) ? 10 : size;
+    if (sort.length == 0) {
+      sort = new String[2];
+      sort[0] = (sort[0] == null) ? "id" : sort[0];
+      sort[1] = (sort[1] == null) ? "asc" : sort[1];
     }
 
-    public Page<AllCustomerDto> AllCustomerList(Integer page, Integer size, String[] sort, String email){
-
-        logger.debug("Page No {} , Page Size {}, Sort {}, Email {}",page,size,sort,email);
-
-        Pageable pageable = pagination(page,size,sort);
-
-        if(email!=null) {
-          User user = userRepository.findByEmail(email)
-              .orElseThrow(() -> new UserNotFoundException("Invalid Email"));
-
-          final Customer customer = customerRepository.findByUser(user)
-              .orElseThrow(() -> new CustomException("Email invalid"));
-
-          List<AllCustomerDto> customerDtos = List.of(user)
-              .stream()
-              .filter(e -> e.getRole().getAuthority().equals(Roles.ROLE_CUSTOMER.toString()))
-              .map((e -> {
-                AllCustomerDto allCustomerDto = new AllCustomerDto();
-                String fullName = "";
-                if (e.getMiddleName() == null) {
-                  fullName += e.getFirstName() + " " + e.getLastName();
-                } else {
-                        fullName += e.getFirstName()+" ";
-                        fullName += e.getMiddleName() + " ";
-                        fullName += e.getLastName();
-                    }
-                    allCustomerDto.setId(e.getId());
-                    allCustomerDto.setEmail(e.getEmail());
-                    allCustomerDto.setFullName(fullName);
-                    allCustomerDto.setIsActive(e.getIsActive());
-                    allCustomerDto.setContact(customer.getContact());
-
-                    Link link;
-                    if(customer.getUser().getIsActive()){
-                        link = linkTo(methodOn(AdminController.class)
-                                .deActivateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }else {
-                        link = linkTo(methodOn(AdminController.class)
-                                .activateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }
-                    allCustomerDto.add(link);
-
-                    return allCustomerDto;
-                })).toList();
-
-            return new PageImpl(customerDtos, pageable, customerDtos.size());
-        }
-
-
-        Page<Customer> customers = customerRepository.findAll(pageable);
-
-         List<AllCustomerDto> customerDtos = customers.stream()
-                .map((e)->{
-                    AllCustomerDto allCustomerDto = new AllCustomerDto();
-                    String fullName = "";
-                    if(e.getUser().getMiddleName()==null){
-                        fullName += e.getUser().getFirstName() + " " + e.getUser().getLastName();
-                    }else{
-                        fullName += e.getUser().getFirstName()+" ";
-                        fullName += e.getUser().getMiddleName() + " ";
-                        fullName += e.getUser().getLastName();
-                    }
-                    allCustomerDto.setId(e.getId());
-                    allCustomerDto.setEmail(e.getUser().getEmail());
-                    allCustomerDto.setFullName(fullName);
-                    allCustomerDto.setIsActive(e.getUser().getIsActive());
-                    allCustomerDto.setContact(e.getContact());
-
-                    Link link;
-                    if(e.getUser().getIsActive()){
-                        link = linkTo(methodOn(AdminController.class)
-                                .deActivateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }else {
-                        link = linkTo(methodOn(AdminController.class)
-                                .activateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }
-
-                    allCustomerDto.add(link);
-
-                    return allCustomerDto;
-                }).toList();
-
-       return new PageImpl(customerDtos, pageable, customerDtos.size());
+    Sort sortBy;
+    if (sort[1].equals("asc")) {
+      sortBy = Sort.by(sort[0]).ascending();
+    } else {
+      sortBy = Sort.by(sort[0]).descending();
     }
 
-    public Page<AllSellerDto> AllSellerList(Integer page, Integer size, String[] sort, String email){
+    return PageRequest.of(page, size, sortBy);
+  }
 
+  public Page<AllCustomerDto> AllCustomerList(Integer page, Integer size, String[] sort,
+      String email) {
 
-        logger.debug("Page No {} , Page Size {}, SortProperty {}, sortDirection {}, Email {}",page,size,sort,email);
+    logger.debug("Page No {} , Page Size {}, Sort {}, Email {}", page, size, sort, email);
 
-        Pageable pageable = pagination(page,size,sort);
+    Pageable pageable = pagination(page, size, sort);
 
-        if(email!=null){
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(()->new UserNotFoundException("Invalid Email"));
+    if (email != null) {
+      User user = userRepository.findByEmail(email)
+          .orElseThrow(() -> new UserNotFoundException("Invalid Email"));
 
-            final Seller seller = sellerRepository.findByUser(user);
+      final Customer customer = customerRepository.findByUser(user)
+          .orElseThrow(() -> new CustomException("Email invalid"));
 
-            List<AllSellerDto> sellerDtos = userRepository.findByEmail(email)
-                    .stream()
-                    .filter(e->e.getRole().getAuthority().equals(Roles.ROLE_SELLER.toString()))
-                    .map((e->{
-                        AllSellerDto allSellerDto = new AllSellerDto();
-                        String fullName = "";
-                        if(e.getMiddleName()==null){
-                            fullName += e.getFirstName() + " " + e.getLastName();
-                        }else{
-                            fullName += e.getFirstName()+" ";
-                            fullName += e.getMiddleName() + " ";
-                            fullName += e.getLastName();
-                        }
-                        allSellerDto.setId(e.getId());
-                        allSellerDto.setEmail(e.getEmail());
-                        allSellerDto.setFullName(fullName);
-                        allSellerDto.setIsActive(e.getIsActive());
-                        allSellerDto.setCompanyName(seller.getCompanyName());
-                        allSellerDto.setCompanyContact(seller.getCompanyContact());
-                        allSellerDto.setAddress(seller.getUser().getAddress().get(0));
+      List<AllCustomerDto> customerDtos = List.of(user)
+          .stream()
+          .filter(e -> e.getRole().getAuthority().equals(Roles.ROLE_CUSTOMER.toString()))
+          .map((e -> {
+            AllCustomerDto allCustomerDto = new AllCustomerDto();
+            String fullName = "";
+            if (e.getMiddleName() == null) {
+              fullName += e.getFirstName() + " " + e.getLastName();
+            } else {
+              fullName += e.getFirstName() + " ";
+              fullName += e.getMiddleName() + " ";
+              fullName += e.getLastName();
+            }
+            allCustomerDto.setId(e.getId());
+            allCustomerDto.setEmail(e.getEmail());
+            allCustomerDto.setFullName(fullName);
+            allCustomerDto.setIsActive(e.getIsActive());
+            allCustomerDto.setContact(customer.getContact());
 
-                        Link link;
-                        if(seller.getUser().getIsActive()){
-                            link = linkTo(methodOn(AdminController.class)
-                                    .deActivateCustomer(e.getId().intValue()))
-                                    .withRel("id");
-                        }else {
-                            link = linkTo(methodOn(AdminController.class)
-                                    .activateCustomer(e.getId().intValue()))
-                                    .withRel("id");
-                        }
+            Link link;
+            if (customer.getUser().getIsActive()) {
+              link = linkTo(methodOn(AdminController.class)
+                  .deActivateCustomer(e.getId().intValue()))
+                  .withRel("id");
+            } else {
+              link = linkTo(methodOn(AdminController.class)
+                  .activateCustomer(e.getId().intValue()))
+                  .withRel("id");
+            }
+            allCustomerDto.add(link);
 
-                        allSellerDto.add(link);
+            return allCustomerDto;
+          })).toList();
 
-                        return allSellerDto;
-                    })).toList();
-
-            return new PageImpl<AllSellerDto>(sellerDtos, pageable, sellerDtos.size());
-        }
-
-
-        Page<Seller> sellers = sellerRepository.findAll(pageable);
-
-        List<AllSellerDto> sellerDtos = sellers.stream()
-                .map((e)->{
-                    AllSellerDto allSellerDto = new AllSellerDto();
-                    String fullName = "";
-                    if(e.getUser().getMiddleName()==null){
-                        fullName += e.getUser().getFirstName() + " " + e.getUser().getLastName();
-                    }else{
-                        fullName += e.getUser().getFirstName()+" ";
-                        fullName += e.getUser().getMiddleName() + " ";
-                        fullName += e.getUser().getLastName();
-                    }
-                    allSellerDto.setId(e.getId());
-                    allSellerDto.setEmail(e.getUser().getEmail());
-                    allSellerDto.setFullName(fullName);
-                    allSellerDto.setIsActive(e.getUser().getIsActive());
-                    allSellerDto.setCompanyName(e.getCompanyName());
-                    allSellerDto.setCompanyContact(e.getCompanyContact());
-                    allSellerDto.setAddress(e.getUser().getAddress().get(0));
-
-                    Link link;
-                    if(e.getUser().getIsActive()){
-                        link = linkTo(methodOn(AdminController.class)
-                                .deActivateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }else {
-                        link = linkTo(methodOn(AdminController.class)
-                                .activateCustomer(e.getId().intValue()))
-                                .withRel("id");
-                    }
-                    allSellerDto.add(link);
-                    return allSellerDto;
-                }).toList();
-
-        return new PageImpl<AllSellerDto>(sellerDtos, pageable, sellerDtos.size());
+      return new PageImpl(customerDtos, pageable, customerDtos.size());
     }
 
-    public void CustomerActivate(Long id){
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("User not found"));
+    Page<Customer> customers = customerRepository.findAll(pageable);
 
-        if (customer.getUser().getIsActive()){
-            throw new UserIsAlreadyActive("Customer is Already Active");
-        }
+    List<AllCustomerDto> customerDtos = customers.stream()
+        .map((e) -> {
+          AllCustomerDto allCustomerDto = new AllCustomerDto();
+          String fullName = "";
+          if (e.getUser().getMiddleName() == null) {
+            fullName += e.getUser().getFirstName() + " " + e.getUser().getLastName();
+          } else {
+            fullName += e.getUser().getFirstName() + " ";
+            fullName += e.getUser().getMiddleName() + " ";
+            fullName += e.getUser().getLastName();
+          }
+          allCustomerDto.setId(e.getId());
+          allCustomerDto.setEmail(e.getUser().getEmail());
+          allCustomerDto.setFullName(fullName);
+          allCustomerDto.setIsActive(e.getUser().getIsActive());
+          allCustomerDto.setContact(e.getContact());
 
-        User user = customer.getUser();
+          Link link;
+          if (e.getUser().getIsActive()) {
+            link = linkTo(methodOn(AdminController.class)
+                .deActivateCustomer(e.getId().intValue()))
+                .withRel("id");
+          } else {
+            link = linkTo(methodOn(AdminController.class)
+                .activateCustomer(e.getId().intValue()))
+                .withRel("id");
+          }
 
-        user.setIsActive(true);
-        userRepository.save(user);
+          allCustomerDto.add(link);
 
-        try {
-            emailSender.sendCustomEmail(
-                    user,
-                    "Activated !!",
-                    "Dear Customer, \n Your account has been activated ."
-            );
-        }catch (Exception e){
-            logger.error("Email custom email method :: {}",e.getMessage());
-        }
+          return allCustomerDto;
+        }).toList();
 
+    return new PageImpl(customerDtos, pageable, customerDtos.size());
+  }
 
+  public Page<AllSellerDto> AllSellerList(Integer page, Integer size, String[] sort, String email) {
+
+    logger.debug("Page No {} , Page Size {}, SortProperty {}, sortDirection {}, Email {}", page,
+        size, sort, email);
+
+    Pageable pageable = pagination(page, size, sort);
+
+    if (email != null) {
+      User user = userRepository.findByEmail(email)
+          .orElseThrow(() -> new UserNotFoundException("Invalid Email"));
+
+      final Seller seller = sellerRepository.findByUser(user);
+
+      List<AllSellerDto> sellerDtos = userRepository.findByEmail(email)
+          .stream()
+          .filter(e -> e.getRole().getAuthority().equals(Roles.ROLE_SELLER.toString()))
+          .map((e -> {
+            AllSellerDto allSellerDto = new AllSellerDto();
+            String fullName = "";
+            if (e.getMiddleName() == null) {
+              fullName += e.getFirstName() + " " + e.getLastName();
+            } else {
+              fullName += e.getFirstName() + " ";
+              fullName += e.getMiddleName() + " ";
+              fullName += e.getLastName();
+            }
+            allSellerDto.setId(e.getId());
+            allSellerDto.setEmail(e.getEmail());
+            allSellerDto.setFullName(fullName);
+            allSellerDto.setIsActive(e.getIsActive());
+            allSellerDto.setCompanyName(seller.getCompanyName());
+            allSellerDto.setCompanyContact(seller.getCompanyContact());
+            allSellerDto.setAddress(seller.getUser().getAddress().get(0));
+
+            Link link;
+            if (seller.getUser().getIsActive()) {
+              link = linkTo(methodOn(AdminController.class)
+                  .deActivateCustomer(e.getId().intValue()))
+                  .withRel("id");
+            } else {
+              link = linkTo(methodOn(AdminController.class)
+                  .activateCustomer(e.getId().intValue()))
+                  .withRel("id");
+            }
+
+            allSellerDto.add(link);
+
+            return allSellerDto;
+          })).toList();
+
+      return new PageImpl<AllSellerDto>(sellerDtos, pageable, sellerDtos.size());
+    }
+
+    Page<Seller> sellers = sellerRepository.findAll(pageable);
+
+    List<AllSellerDto> sellerDtos = sellers.stream()
+        .map((e) -> {
+          AllSellerDto allSellerDto = new AllSellerDto();
+          String fullName = "";
+          if (e.getUser().getMiddleName() == null) {
+            fullName += e.getUser().getFirstName() + " " + e.getUser().getLastName();
+          } else {
+            fullName += e.getUser().getFirstName() + " ";
+            fullName += e.getUser().getMiddleName() + " ";
+            fullName += e.getUser().getLastName();
+          }
+          allSellerDto.setId(e.getId());
+          allSellerDto.setEmail(e.getUser().getEmail());
+          allSellerDto.setFullName(fullName);
+          allSellerDto.setIsActive(e.getUser().getIsActive());
+          allSellerDto.setCompanyName(e.getCompanyName());
+          allSellerDto.setCompanyContact(e.getCompanyContact());
+          allSellerDto.setAddress(e.getUser().getAddress().get(0));
+
+          Link link;
+          if (e.getUser().getIsActive()) {
+            link = linkTo(methodOn(AdminController.class)
+                .deActivateCustomer(e.getId().intValue()))
+                .withRel("id");
+          } else {
+            link = linkTo(methodOn(AdminController.class)
+                .activateCustomer(e.getId().intValue()))
+                .withRel("id");
+          }
+          allSellerDto.add(link);
+          return allSellerDto;
+        }).toList();
+
+    return new PageImpl<AllSellerDto>(sellerDtos, pageable, sellerDtos.size());
+  }
+
+  public void CustomerActivate(Long id) {
+    Customer customer = customerRepository.findById(id)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+    if (customer.getUser().getIsActive()) {
+      throw new UserIsAlreadyActive("Customer is Already Active");
+    }
+
+    User user = customer.getUser();
+
+    user.setIsActive(true);
+    userRepository.save(user);
+
+    try {
+      emailSender.sendCustomEmail(
+          user,
+          "Activated !!",
+          "Dear Customer, \n Your account has been activated ."
+      );
+    } catch (Exception e) {
+      logger.error("Email custom email method :: {}", e.getMessage());
     }
 
 
-    public void SellerActivate(Long id){
-        Seller seller = sellerRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("User not found"));
+  }
 
-        if (seller.getUser().getIsActive()){
-            throw new UserIsAlreadyActive("Seller is Already Active");
-        }
 
-        User user = seller.getUser();
+  public void SellerActivate(Long id) {
+    Seller seller = sellerRepository.findById(id)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        user.setIsActive(true);
-        userRepository.save(user);
-
-        try {
-            emailSender.sendCustomEmail(
-                    user,
-                    "Activated !!",
-                    "Dear Seller, \n Your account has been activated ."
-            );
-        }catch (Exception e){
-            logger.error("Email custom email method :: {}",e.getMessage());
-        }
+    if (seller.getUser().getIsActive()) {
+      throw new UserIsAlreadyActive("Seller is Already Active");
     }
 
-    public void CustomerDeActivate(Long id){
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("User not found"));
+    User user = seller.getUser();
 
-        if (!customer.getUser().getIsActive()){
-            throw new UserIsAlreadyActive("Seller is Already De-Activated");
-        }
+    user.setIsActive(true);
+    userRepository.save(user);
 
-        User user = customer.getUser();
+    try {
+      emailSender.sendCustomEmail(
+          user,
+          "Activated !!",
+          "Dear Seller, \n Your account has been activated ."
+      );
+    } catch (Exception e) {
+      logger.error("Email custom email method :: {}", e.getMessage());
+    }
+  }
 
-        user.setIsActive(false);
-        userRepository.save(user);
+  public void CustomerDeActivate(Long id) {
+    Customer customer = customerRepository.findById(id)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        try {
-            emailSender.sendCustomEmail(
-                    user,
-                    "De-Activated !!",
-                    "Dear Customer, \n Your account has been de-activated ."
-            );
-        }catch (Exception e){
-            logger.error("Email custom email method :: {}",e.getMessage());
-        }
+    if (!customer.getUser().getIsActive()) {
+      throw new UserIsAlreadyActive("Seller is Already De-Activated");
     }
 
+    User user = customer.getUser();
 
-    public void SellerDeActivate(Long id){
-        Seller seller = sellerRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("User not found"));
+    user.setIsActive(false);
+    userRepository.save(user);
 
-        if (!seller.getUser().getIsActive()){
-            throw new UserIsAlreadyActive("Seller is Already De-Activated");
-        }
+    try {
+      emailSender.sendCustomEmail(
+          user,
+          "De-Activated !!",
+          "Dear Customer, \n Your account has been de-activated ."
+      );
+    } catch (Exception e) {
+      logger.error("Email custom email method :: {}", e.getMessage());
+    }
+  }
 
-        User user = seller.getUser();
 
-        user.setIsActive(false);
-        userRepository.save(user);
+  public void SellerDeActivate(Long id) {
+    Seller seller = sellerRepository.findById(id)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        try {
-            emailSender.sendCustomEmail(
-                    user,
-                    "De-Activated !!",
-                    "Dear Seller, \n Your account has been de-activated ."
-            );
-        }catch (Exception e){
-            logger.error("Email custom email method :: {}",e.getMessage());
-        }
+    if (!seller.getUser().getIsActive()) {
+      throw new UserIsAlreadyActive("Seller is Already De-Activated");
     }
 
+    User user = seller.getUser();
+
+    user.setIsActive(false);
+    userRepository.save(user);
+
+    try {
+      emailSender.sendCustomEmail(
+          user,
+          "De-Activated !!",
+          "Dear Seller, \n Your account has been de-activated ."
+      );
+    } catch (Exception e) {
+      logger.error("Email custom email method :: {}", e.getMessage());
+    }
+  }
 
 
 }

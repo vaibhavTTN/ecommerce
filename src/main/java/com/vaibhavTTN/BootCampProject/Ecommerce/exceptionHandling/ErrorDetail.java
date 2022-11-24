@@ -3,26 +3,27 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling;
 import java.time.LocalDateTime;
 
 public class ErrorDetail {
-    private LocalDateTime timeStamp;
-    private String message;
-    private String details;
 
-    public ErrorDetail(LocalDateTime timeStamp, String message, String details) {
-        super();
-        this.timeStamp = timeStamp;
-        this.message = message;
-        this.details = details;
-    }
+  private final LocalDateTime timeStamp;
+  private final String message;
+  private final String details;
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
+  public ErrorDetail(LocalDateTime timeStamp, String message, String details) {
+    super();
+    this.timeStamp = timeStamp;
+    this.message = message;
+    this.details = details;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public LocalDateTime getTimeStamp() {
+    return timeStamp;
+  }
 
-    public String getDetails() {
-        return details;
-    }
+  public String getMessage() {
+    return message;
+  }
+
+  public String getDetails() {
+    return details;
+  }
 }

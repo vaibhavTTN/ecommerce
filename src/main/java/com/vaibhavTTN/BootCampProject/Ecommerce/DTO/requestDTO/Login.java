@@ -1,8 +1,10 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO;
-import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -10,10 +12,10 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class Login {
 
-    @NotBlank(message = "username cannot be blank")
-    private String username;
+  @NotBlank(message = "username cannot be blank")
+  private String username;
 
-    @NotBlank(message = "password cannot be blank")
-    private String password;
+  @NotBlank(message = "password cannot be blank")
+  private String password;
 }
 

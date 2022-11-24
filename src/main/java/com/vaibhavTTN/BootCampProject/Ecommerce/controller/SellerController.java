@@ -27,70 +27,70 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/seller")
 public class SellerController {
 
-    @Autowired
-    SellerService sellerService;
+  @Autowired
+  SellerService sellerService;
 
-    @GetMapping("/image")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<byte[]> getImage(Authentication authentication) throws IOException {
+  @GetMapping("/image")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public ResponseEntity<byte[]> getImage(Authentication authentication) throws IOException {
 
-        String userId = sellerService.getImage(authentication);
+    String userId = sellerService.getImage(authentication);
 
-        var imgFile = new ClassPathResource("user_id/" + userId);
-        byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
+    var imgFile = new ClassPathResource("user_id/" + userId);
+    byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.IMAGE_JPEG)
-            .body(bytes);
-    }
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.IMAGE_JPEG)
+        .body(bytes);
+  }
 
-    @GetMapping("/profile")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public SellerProfileDto getSellerProfile(Authentication authentication) {
-        return sellerService.getSellerProfile(authentication);
-    }
+  @GetMapping("/profile")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public SellerProfileDto getSellerProfile(Authentication authentication) {
+    return sellerService.getSellerProfile(authentication);
+  }
 
-    @PatchMapping("/update-password")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<String> updateSellerPassword(Authentication authentication,
-        @RequestBody UpdatePassword updatePassword) {
-        String message = sellerService.updateSellerPassword(authentication,updatePassword);
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
+  @PatchMapping("/update-password")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public ResponseEntity<String> updateSellerPassword(Authentication authentication,
+      @RequestBody UpdatePassword updatePassword) {
+    String message = sellerService.updateSellerPassword(authentication, updatePassword);
+    return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+  }
 
-    @PatchMapping("/update-address/{id}")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<String> updateSellerAddress(Authentication authentication,
-        @PathVariable("id") Integer id, @RequestBody Address requestAddress) {
-        String message = sellerService.updateSellerAddress(authentication, Long.valueOf(id),
-            requestAddress);
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
+  @PatchMapping("/update-address/{id}")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public ResponseEntity<String> updateSellerAddress(Authentication authentication,
+      @PathVariable("id") Integer id, @RequestBody Address requestAddress) {
+    String message = sellerService.updateSellerAddress(authentication, Long.valueOf(id),
+        requestAddress);
+    return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+  }
 
-    @PatchMapping("/update-image")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<String> updateSellerProfileImage(
-            Authentication authentication,
-            @RequestParam("image") MultipartFile file
-    ) throws IOException {
-        String message = sellerService.updateSellerProfileImage(authentication,file);
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
+  @PatchMapping("/update-image")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public ResponseEntity<String> updateSellerProfileImage(
+      Authentication authentication,
+      @RequestParam("image") MultipartFile file
+  ) throws IOException {
+    String message = sellerService.updateSellerProfileImage(authentication, file);
+    return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+  }
 
-    @PatchMapping("/update-profile")
-    @PreAuthorize("hasAuthority('ROLE_SELLER')")
-    public ResponseEntity<String> updateSellerProfile(
-            Authentication authentication,
-            @RequestBody SellerUpdateProfileDto sellerUpdateProfileDto
-    ) throws IOException {
-        String message = sellerService.sellerUpdateProfile(authentication,sellerUpdateProfileDto);
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-    }
+  @PatchMapping("/update-profile")
+  @PreAuthorize("hasAuthority('ROLE_SELLER')")
+  public ResponseEntity<String> updateSellerProfile(
+      Authentication authentication,
+      @RequestBody SellerUpdateProfileDto sellerUpdateProfileDto
+  ) throws IOException {
+    String message = sellerService.sellerUpdateProfile(authentication, sellerUpdateProfileDto);
+    return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+  }
 
-    @GetMapping("/dir")
-    public String getDir(){
-        return System.getProperty("user.dir");
-    }
+  @GetMapping("/dir")
+  public String getDir() {
+    return System.getProperty("user.dir");
+  }
 
 }
