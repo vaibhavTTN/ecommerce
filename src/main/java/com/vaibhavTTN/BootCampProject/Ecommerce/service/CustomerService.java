@@ -1,16 +1,16 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerUpdateProfileDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.UpdatePassword;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.CustomerProfileDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.CustomerUpdateProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.UpdatePassword;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.CustomerProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.util.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Customer;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.CustomException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.PasswordMatchException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserNotFoundException;
-import com.vaibhavTTN.BootCampProject.Ecommerce.properties.ApplicationProperties;
+import com.vaibhavTTN.BootCampProject.Ecommerce.config.ApplicationProperties;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.AddressRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.CustomerRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;

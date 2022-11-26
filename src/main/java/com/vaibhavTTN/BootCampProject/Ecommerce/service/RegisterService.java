@@ -1,8 +1,8 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerDetails;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerDetails;
-import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.CustomerDetails;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.SellerDetails;
+import com.vaibhavTTN.BootCampProject.Ecommerce.util.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.ConfirmationToken;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Customer;

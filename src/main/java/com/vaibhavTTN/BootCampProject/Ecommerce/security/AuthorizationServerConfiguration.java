@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
+package com.vaibhavTTN.BootCampProject.Ecommerce.security;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +54,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
   public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
     endpoints.tokenStore(tokenStore()).userDetailsService(userDetailsService)
         .authenticationManager(authenticationManager)
-        .accessTokenConverter(accessTokenConverter());
-//                .pathMapping("/oauth/token", "/login");
+        .accessTokenConverter(accessTokenConverter())
+                .pathMapping("/oauth/token", "/login");
   }
 
   @Bean

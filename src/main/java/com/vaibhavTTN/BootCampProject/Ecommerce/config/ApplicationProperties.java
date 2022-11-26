@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.properties;
+package com.vaibhavTTN.BootCampProject.Ecommerce.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

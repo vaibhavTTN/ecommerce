@@ -3,6 +3,7 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.security.auth.login.AccountLockedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     return new ResponseEntity<ErrorDetail>(errorDetail, HttpStatus.NOT_FOUND);
   }
 
-  @Override
+   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
     List<String> validationErrors = new ArrayList<>();

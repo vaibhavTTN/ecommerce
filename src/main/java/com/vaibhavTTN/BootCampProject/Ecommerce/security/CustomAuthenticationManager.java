@@ -1,6 +1,6 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
+package com.vaibhavTTN.BootCampProject.Ecommerce.security;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.util.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.CustomException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;

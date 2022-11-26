@@ -1,8 +1,8 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.controller;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerUpdateProfileDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.UpdatePassword;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.SellerProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.SellerUpdateProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.UpdatePassword;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.SellerProfileDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.service.SellerService;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO;
+package com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

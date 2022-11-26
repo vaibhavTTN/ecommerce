@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.config.security;
+package com.vaibhavTTN.BootCampProject.Ecommerce.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 
 @Configuration
@@ -23,6 +24,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+//  @Autowired
+//  AuthenticationEntryPoint authEntryPoint;
   @Autowired
   UserDetailsService userDetailsService;
 
@@ -66,6 +69,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 //        .anyRequest().authenticated()
         .anyRequest().permitAll()
         .and()
+//        .exceptionHandling()
+//        .authenticationEntryPoint(authEntryPoint)
+//        .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .csrf().disable().logout().logoutSuccessUrl("/");

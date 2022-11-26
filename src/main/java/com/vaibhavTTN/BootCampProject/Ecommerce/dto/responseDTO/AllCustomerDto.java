@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO;
+package com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

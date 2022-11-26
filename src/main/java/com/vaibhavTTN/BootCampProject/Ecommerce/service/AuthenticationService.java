@@ -1,8 +1,8 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.EmailDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.ResetPassword;
-import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.EmailDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.ResetPassword;
+import com.vaibhavTTN.BootCampProject.Ecommerce.util.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.ConfirmationToken;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.PasswordMatchException;

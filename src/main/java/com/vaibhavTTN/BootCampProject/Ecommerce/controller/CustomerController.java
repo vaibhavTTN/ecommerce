@@ -1,8 +1,8 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.controller;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerUpdateProfileDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.UpdatePassword;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.CustomerProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.CustomerUpdateProfileDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.UpdatePassword;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.CustomerProfileDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;

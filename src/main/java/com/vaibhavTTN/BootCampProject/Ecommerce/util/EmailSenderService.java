@@ -1,10 +1,11 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.Utilities;
+package com.vaibhavTTN.BootCampProject.Ecommerce.util;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.ConfirmationToken;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
-import com.vaibhavTTN.BootCampProject.Ecommerce.properties.ApplicationProperties;
+import com.vaibhavTTN.BootCampProject.Ecommerce.config.ApplicationProperties;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.TokenRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,20 @@ public class EmailSenderService {
     javaMailSender.send(mail);
 
     logger.debug("Email Sent for {} : to : {} ", subject, user.getEmail());
+  }
+
+  @Async
+  public void sendListOfNotActivateSeller(List<String> seller) throws MailException {
+
+    SimpleMailMessage mail = new SimpleMailMessage();
+    mail.setTo(applicationProperties.getAdminEmail());
+    mail.setSubject("Pending!! to Activate Seller!");
+    mail.setFrom(applicationProperties.getSenderEmail());
+    mail.setText("Dear Admin,\n Following user are left to verify.");
+
+    javaMailSender.send(mail);
+
+    logger.debug("Email Sent for not active list of seller");
   }
 
 

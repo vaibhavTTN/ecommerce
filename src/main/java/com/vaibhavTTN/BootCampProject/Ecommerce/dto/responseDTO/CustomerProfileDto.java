@@ -1,6 +1,7 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO;
+package com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,15 +11,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SellerProfileDto {
+public class CustomerProfileDto {
 
   private Long id;
   private String firstName;
   private String lastName;
   private Boolean IsActive;
-  private String companyContact;
-  private String companyName;
+  private String contact;
   private String image;
-  private String GST;
-  private Address address;
+  private List<Address> address;
 }

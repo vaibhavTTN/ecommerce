@@ -1,7 +1,7 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.controller;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllCustomerDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllSellerDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.AllCustomerDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.AllSellerDto;
 import com.vaibhavTTN.BootCampProject.Ecommerce.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO;
+package com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Address;
 import lombok.AllArgsConstructor;

@@ -3,9 +3,9 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllCustomerDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.responseDTO.AllSellerDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.Utilities.EmailSenderService;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.AllCustomerDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.responseDTO.AllSellerDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.util.EmailSenderService;
 import com.vaibhavTTN.BootCampProject.Ecommerce.controller.AdminController;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Customer;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Seller;

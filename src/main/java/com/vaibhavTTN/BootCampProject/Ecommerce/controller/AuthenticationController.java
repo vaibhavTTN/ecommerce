@@ -1,7 +1,7 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.controller;
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.EmailDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.ResetPassword;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.EmailDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.ResetPassword;
 import com.vaibhavTTN.BootCampProject.Ecommerce.service.AuthenticationService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

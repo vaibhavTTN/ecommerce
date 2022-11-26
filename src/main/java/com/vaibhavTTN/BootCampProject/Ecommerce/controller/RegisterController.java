@@ -1,9 +1,9 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.controller;
 
 
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.CustomerDetails;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.EmailDto;
-import com.vaibhavTTN.BootCampProject.Ecommerce.DTO.requestDTO.SellerDetails;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.CustomerDetails;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.EmailDto;
+import com.vaibhavTTN.BootCampProject.Ecommerce.dto.requestDTO.SellerDetails;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import com.vaibhavTTN.BootCampProject.Ecommerce.service.RegisterService;
