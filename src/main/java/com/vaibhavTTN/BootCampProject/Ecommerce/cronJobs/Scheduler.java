@@ -30,9 +30,10 @@ public class Scheduler {
          return;
       }
 
-      List<String> seller = user.stream().filter(e->{
-         return e.getRole().equals(Roles.ROLE_SELLER.toString()) && !e.getIsActive();
-      }).map(User::getEmail).toList();
+      List<String> seller = user.stream()
+          .filter(e-> e.getRole().equals(Roles.ROLE_SELLER.toString()) && !e.getIsActive())
+          .map(User::getEmail)
+          .toList();
 
             emailSenderService.sendListOfNotActivateSeller(seller);
    }

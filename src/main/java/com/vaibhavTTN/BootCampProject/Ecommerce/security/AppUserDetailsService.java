@@ -3,6 +3,7 @@ package com.vaibhavTTN.BootCampProject.Ecommerce.security;
 
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.Role;
 import com.vaibhavTTN.BootCampProject.Ecommerce.entities.User;
+import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.CustomException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.exceptionHandling.UserNotFoundException;
 import com.vaibhavTTN.BootCampProject.Ecommerce.repository.UserRepository;
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class AppUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userRepository.findByEmail(username)
         .orElseThrow(() -> new UserNotFoundException("invalid email"));
+
 
     if (user == null) {
       throw new UsernameNotFoundException("Invalid Credential :: " + username);

@@ -1,5 +1,6 @@
 package com.vaibhavTTN.BootCampProject.Ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,6 +33,7 @@ public class Address {
 
   private String label;
 
+  @JsonIgnore
   private Boolean isDeleted;
 
 }

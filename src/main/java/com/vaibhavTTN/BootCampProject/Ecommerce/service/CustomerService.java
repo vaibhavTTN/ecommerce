@@ -313,6 +313,10 @@ public class CustomerService {
       }
     });
 
+    if(matchingFiles.length==0){
+      throw new CustomException("Profile Image Not Found");
+    }
+
     return matchingFiles[0].getName();
   }
 }

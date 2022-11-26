@@ -24,5 +24,4 @@ public class SellerUpdateProfileDto {
 
   private String companyContact;
 
-  private MultipartFile image;
 }

@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -25,6 +26,24 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         request.getDescription(false)
     );
     return new ResponseEntity<Object>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(value = BadCredentialsException.class)
+  @ResponseStatus()
+  public ResponseEntity<ErrorDetail> handleBadCredentialException(
+      BadCredentialsException ex,WebRequest request) {
+    ErrorDetail err = new ErrorDetail(LocalDateTime.now(), ex.getMessage(),request.getDescription(false) );
+
+    return new ResponseEntity<>(err, null, HttpStatus.UNAUTHORIZED.value());
+  }
+
+  @ExceptionHandler(value = CustomException.class)
+  @ResponseStatus()
+  public ResponseEntity<ErrorDetail> handleCustomException(
+      CustomException ex,WebRequest request) {
+    ErrorDetail err = new ErrorDetail(LocalDateTime.now(), ex.getMessage(),request.getDescription(false) );
+
+    return new ResponseEntity<>(err, null, HttpStatus.UNAUTHORIZED.value());
   }
 
   @ExceptionHandler(UserNotFoundException.class)

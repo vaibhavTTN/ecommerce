@@ -34,6 +34,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
   @Autowired
   EmailSenderService emailSenderService;
 
+
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -41,8 +42,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     logger.debug(
         "CustomAuthenticationManager::authenticate authenticating credentials, generating token");
 
+
     String username = authentication.getName();
     String password = authentication.getCredentials().toString();
+
 
     User user = userRepository.findByEmail(username).orElseThrow(
         () -> {
@@ -51,19 +54,17 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         }
     );
 
+
     if (Boolean.TRUE.equals(user.getIsDelete())) {
-      logger.error("Exception occurred while Account is Deleted");
-      throw new CustomException("Invalid Credentials");
+      throw new BadCredentialsException("Invalid Credentials");
     }
 
     if (Boolean.TRUE.equals(user.getIsLocked())) {
-      logger.error("Exception occurred while Account is Locked");
-      throw new CustomException("Account is locked");
+      throw new BadCredentialsException("Account is locked");
     }
 
-    if (Boolean.TRUE.equals(user.getIsActive())) {
-      logger.error("Exception occurred while Account is not Active");
-      throw new CustomException("Account is not Active");
+    if (Boolean.FALSE.equals(user.getIsActive())) {
+      throw new BadCredentialsException("Account is not Active");
     }
 
     if (!passwordEncoder.matches(password, user.getPassword())) {

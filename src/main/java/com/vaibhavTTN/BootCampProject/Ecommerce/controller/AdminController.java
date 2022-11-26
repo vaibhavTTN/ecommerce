@@ -11,6 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class AdminController {
 
 
   @GetMapping("/customers")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public PagedModel<EntityModel<AllCustomerDto>> customers(
       @Param("page") Integer page,
       @Param("size") Integer size,
@@ -44,6 +46,7 @@ public class AdminController {
   }
 
   @GetMapping("/sellers")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public PagedModel<EntityModel<AllSellerDto>> sellers(
       @Param("page") Integer page,
       @Param("size") Integer size,
@@ -54,6 +57,7 @@ public class AdminController {
   }
 
   @PatchMapping("/customer/activate/{id}")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<String> activateCustomer(@PathVariable("id") Integer id) {
     adminService.CustomerActivate(Long.valueOf(id));
     return new ResponseEntity<>("Customer is activated", HttpStatus.ACCEPTED);
@@ -61,6 +65,7 @@ public class AdminController {
 
 
   @PatchMapping("/seller/activate/{id}")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<String> activateSeller(@PathVariable("id") Integer id) {
     adminService.SellerActivate(Long.valueOf(id));
     return new ResponseEntity<>("Seller is activated", HttpStatus.ACCEPTED);
@@ -68,6 +73,7 @@ public class AdminController {
 
 
   @PatchMapping("/customer/de-activate/{id}")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<String> deActivateCustomer(@PathVariable("id") Integer id) {
     adminService.CustomerDeActivate(Long.valueOf(id));
     return new ResponseEntity<>("Customer is de-activated", HttpStatus.ACCEPTED);
@@ -75,7 +81,8 @@ public class AdminController {
 
 
   @PatchMapping("/seller/de-activate/{id}")
-  public ResponseEntity<String> deActivateSeller(@PathVariable("id") Integer id) {
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  public ResponseEntity <String> deActivateSeller(@PathVariable("id") Integer id) {
     adminService.SellerDeActivate(Long.valueOf(id));
     return new ResponseEntity<>("Seller is de-activated", HttpStatus.ACCEPTED);
   }
